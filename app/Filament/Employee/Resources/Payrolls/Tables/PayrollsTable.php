@@ -48,7 +48,7 @@ class PayrollsTable
                 //
             ])
             ->recordActions([
-                \Filament\Tables\Actions\Action::make('download_payslip')
+                \Filament\Actions\Action::make('download_payslip')
                     ->label('Download PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->url(fn (\App\Models\Payroll $record) => route('payroll.download', $record))

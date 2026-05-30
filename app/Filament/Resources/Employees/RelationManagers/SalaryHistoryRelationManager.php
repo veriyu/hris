@@ -3,8 +3,6 @@
 namespace App\Filament\Resources\Employees\RelationManagers;
 
 use App\Actions\EmployeeSalaryAction;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -16,26 +14,26 @@ class SalaryHistoryRelationManager extends RelationManager
 
     protected static ?string $title = 'Salary History';
 
-    public function form(Schema $schema): Schema
+    public function schema(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Forms\Components\TextInput::make('basic_salary')
+                Filament\Forms\Components\TextInput::make('basic_salary')
                     ->required()
                     ->numeric()
                     ->prefix('Rp')
                     ->default(0),
-                Forms\Components\TextInput::make('allowance')
+                Filament\Forms\Components\TextInput::make('allowance')
                     ->required()
                     ->numeric()
                     ->prefix('Rp')
                     ->default(0),
-                Forms\Components\TextInput::make('deduction')
+                Filament\Forms\Components\TextInput::make('deduction')
                     ->required()
                     ->numeric()
                     ->prefix('Rp')
                     ->default(0),
-                Forms\Components\DatePicker::make('effective_date')
+                Filament\Forms\Components\DatePicker::make('effective_date')
                     ->required()
                     ->default(now()),
             ]);

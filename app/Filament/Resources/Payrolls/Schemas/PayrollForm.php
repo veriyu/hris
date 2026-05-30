@@ -12,7 +12,7 @@ class PayrollForm
     {
         return $schema
             ->components([
-                \Filament\Forms\Components\Section::make('Payroll Info')->schema([
+                \Filament\Schemas\Components\Section::make('Payroll Info')->schema([
                     Select::make('payroll_period_id')
                         ->relationship('payrollPeriod', 'name')
                         ->required(),
@@ -23,7 +23,7 @@ class PayrollForm
                         ->required()
                         ->default('Draft'),
                 ])->columns(3),
-                \Filament\Forms\Components\Section::make('Salary Details')->schema([
+                \Filament\Schemas\Components\Section::make('Salary Details')->schema([
                     TextInput::make('basic_salary')
                         ->required()
                         ->numeric()

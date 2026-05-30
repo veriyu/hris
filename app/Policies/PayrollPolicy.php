@@ -13,7 +13,7 @@ class PayrollPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('employee') || $user->employee !== null;
+        return $user->hasRole('HR') || $user->hasRole('employee') || $user->employee !== null;
     }
 
     /**
@@ -21,7 +21,7 @@ class PayrollPolicy
      */
     public function view(User $user, Payroll $payroll): bool
     {
-        return $user->hasRole('employee') || $user->employee !== null;
+        return $user->hasRole('HR') || $user->hasRole('employee') || $user->employee !== null;
     }
 
     /**
@@ -29,7 +29,7 @@ class PayrollPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -37,7 +37,7 @@ class PayrollPolicy
      */
     public function update(User $user, Payroll $payroll): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -45,7 +45,7 @@ class PayrollPolicy
      */
     public function delete(User $user, Payroll $payroll): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -53,7 +53,7 @@ class PayrollPolicy
      */
     public function restore(User $user, Payroll $payroll): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -61,6 +61,6 @@ class PayrollPolicy
      */
     public function forceDelete(User $user, Payroll $payroll): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 }

@@ -13,7 +13,7 @@ class PayrollPeriodPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -21,7 +21,7 @@ class PayrollPeriodPolicy
      */
     public function view(User $user, PayrollPeriod $payrollPeriod): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -29,7 +29,7 @@ class PayrollPeriodPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -37,7 +37,7 @@ class PayrollPeriodPolicy
      */
     public function update(User $user, PayrollPeriod $payrollPeriod): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -45,7 +45,7 @@ class PayrollPeriodPolicy
      */
     public function delete(User $user, PayrollPeriod $payrollPeriod): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -53,7 +53,7 @@ class PayrollPeriodPolicy
      */
     public function restore(User $user, PayrollPeriod $payrollPeriod): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 
     /**
@@ -61,6 +61,6 @@ class PayrollPeriodPolicy
      */
     public function forceDelete(User $user, PayrollPeriod $payrollPeriod): bool
     {
-        return false;
+        return $user->hasRole('HR');
     }
 }

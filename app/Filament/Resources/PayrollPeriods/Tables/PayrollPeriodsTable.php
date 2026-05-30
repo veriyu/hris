@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -47,10 +48,9 @@ class PayrollPeriodsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                \Filament\Tables\Actions\Action::make('generate_payrolls')
-                    ->label('Generate Payroll')
+                Action::make('generate_payrolls')
+                    ->label('Generate Payrolls')
                     ->icon('heroicon-o-cog')
-                    ->color('success')
                     ->requiresConfirmation()
                     ->action(function (\App\Models\PayrollPeriod $record) {
                         app(\App\Actions\PayrollAction::class)->generatePayrolls($record);
@@ -58,7 +58,8 @@ class PayrollPeriodsTable
                             ->title('Payroll generated successfully!')
                             ->success()
                             ->send();
-                    }),
+                    })
+                    ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status === 'Draft' && $record->payrolls()->count() === 0),
                 EditAction::make(),
             ])
             ->toolbarActions([
