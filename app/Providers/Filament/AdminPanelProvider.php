@@ -40,10 +40,6 @@ class AdminPanelProvider extends PanelProvider
                      ->icon('heroicon-o-users')
                      ->collapsed(),
                 \Filament\Navigation\NavigationGroup::make()
-                     ->label('Finance & Payroll')
-                     ->icon('heroicon-o-banknotes')
-                     ->collapsed(),
-                \Filament\Navigation\NavigationGroup::make()
                      ->label('Organization')
                      ->icon('heroicon-o-building-office')
                      ->collapsed(),

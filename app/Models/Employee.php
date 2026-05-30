@@ -70,6 +70,11 @@ class Employee extends Model
         return $this->hasMany(EmployeeSalaryHistory::class);
     }
 
+    public function bank(): BelongsTo
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
     public function activeSalary(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(EmployeeSalaryHistory::class)->where('is_active', true);

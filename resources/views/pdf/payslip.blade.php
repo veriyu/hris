@@ -38,6 +38,12 @@
             <td><strong>Departemen</strong></td>
             <td>: {{ $employee->position->department->name ?? '-' }}</td>
         </tr>
+        <tr>
+            <td><strong>Bank / Rekening</strong></td>
+            <td>: {{ $employee->bank->name ?? '-' }} / {{ $employee->bank_account_number ?? '-' }}</td>
+            <td><strong>Nama Rekening</strong></td>
+            <td>: {{ $employee->bank_account_name ?? '-' }}</td>
+        </tr>
     </table>
 
     <table class="details-table">
@@ -95,7 +101,7 @@
                     Dibuat Oleh,
                     <br><br><br><br><br>
                     ( ____________________ )<br>
-                    <strong>HR / Finance</strong>
+                    <strong>HR</strong>
                 </td>
                 <td style="text-align: center; width: 50%; border: none;">
                     Diterima Oleh,

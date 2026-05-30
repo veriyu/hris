@@ -49,7 +49,7 @@ class PayrollPeriodsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                Action::make('generate_payrolls')
+                \Filament\Actions\Action::make('generate_payrolls')
                     ->label('Generate Payrolls')
                     ->icon('heroicon-o-cog')
                     ->requiresConfirmation()
@@ -66,6 +66,12 @@ class PayrollPeriodsTable
                     ->url(fn (\App\Models\PayrollPeriod $record) => route('payroll-period.download-all', $record))
                     ->openUrlInNewTab()
                     ->color('success'),
+                \Filament\Actions\Action::make('download_finance_pdf')
+                    ->label('Download Finance PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(fn (\App\Models\PayrollPeriod $record) => route('payroll-period.download-finance', $record))
+                    ->openUrlInNewTab()
+                    ->color('warning'),
                 \Filament\Actions\EditAction::make(),
             ])
             ->toolbarActions([

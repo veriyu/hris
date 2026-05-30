@@ -62,6 +62,18 @@ class EmployeeForm
                                     ->searchable()
                                     ->preload(),
                             ])->columns(2),
+                        \Filament\Schemas\Components\Tabs\Tab::make('Financial Information')
+                            ->schema([
+                                Select::make('bank_id')
+                                    ->relationship('bank', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->label('Bank Name'),
+                                TextInput::make('bank_account_number')
+                                    ->label('Account Number'),
+                                TextInput::make('bank_account_name')
+                                    ->label('Account Name'),
+                            ])->columns(2),
                     ])->columnSpanFull()
             ]);
     }

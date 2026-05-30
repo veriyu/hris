@@ -49,4 +49,38 @@ class PayrollController extends Controller
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
     }
+
+    public function downloadFinance(\App\Models\PayrollPeriod $payrollPeriod)
+    {
+        $payrolls = $payrollPeriod->payrolls()->with(['items'])->get();
+        
+        $totalNetSalary = 0;
+        $totalGrossSalary = 0;
+        $totalBPJS = 0;
+        $totalOtherDeductions = 0;
+
+        foreach ($payrolls as $payroll) {
+            $earnings = $payroll->items()->where('type', 'Earning')->sum('amount');
+            $gross = $payroll->basic_salary + $earnings;
+            $totalGrossSalary += $gross;
+
+            $bpjs = $payroll->items()->where('type', 'Deduction')->where('name', 'like', '%BPJS%')->sum('amount');
+            $totalBPJS += $bpjs;
+
+            $otherDeductions = $payroll->items()->where('type', 'Deduction')->where('name', 'not like', '%BPJS%')->sum('amount');
+            $totalOtherDeductions += $otherDeductions;
+
+            $totalNetSalary += $payroll->net_salary;
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.payroll_finance', [
+            'period' => $payrollPeriod,
+            'totalGrossSalary' => $totalGrossSalary,
+            'totalBPJS' => $totalBPJS,
+            'totalOtherDeductions' => $totalOtherDeductions,
+            'totalNetSalary' => $totalNetSalary,
+        ]);
+
+        return $pdf->stream('Payroll_Finance_Report_' . $payrollPeriod->name . '.pdf');
+    }
 }
