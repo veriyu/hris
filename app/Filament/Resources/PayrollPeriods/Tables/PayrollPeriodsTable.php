@@ -60,9 +60,13 @@ class PayrollPeriodsTable
                             ->success()
                             ->send();
                     }),
-                    // ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status === 'Draft' && $record->payrolls()->count() === 0),
-                    // ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status === 'Draft'),
-                EditAction::make(),
+                \Filament\Actions\Action::make('download_all_pdf')
+                    ->label('Download All PDF')
+                    ->icon('heroicon-o-archive-box')
+                    ->url(fn (\App\Models\PayrollPeriod $record) => route('payroll-period.download-all', $record))
+                    ->openUrlInNewTab()
+                    ->color('success'),
+                \Filament\Actions\EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
