@@ -18,7 +18,8 @@ class AttendanceResource extends Resource
 {
     protected static ?string $model = Attendance::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-clock';
+    protected static \UnitEnum|string|null $navigationGroup = 'HR Management';
 
     protected static ?string $recordTitleAttribute = 'date';
 

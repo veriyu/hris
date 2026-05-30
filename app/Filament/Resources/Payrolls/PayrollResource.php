@@ -20,7 +20,7 @@ class PayrollResource extends Resource
 {
     protected static ?string $model = Payroll::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
     protected static \UnitEnum|string|null $navigationGroup = 'Finance';
 
     public static function form(Schema $schema): Schema

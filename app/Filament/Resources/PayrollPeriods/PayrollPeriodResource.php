@@ -20,7 +20,7 @@ class PayrollPeriodResource extends Resource
 {
     protected static ?string $model = PayrollPeriod::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calendar';
     protected static \UnitEnum|string|null $navigationGroup = 'Finance';
 
     protected static ?string $recordTitleAttribute = 'name';

@@ -22,7 +22,7 @@ class OutletResource extends Resource
 {
     protected static ?string $model = Outlet::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-building-storefront';
     protected static \UnitEnum|string|null $navigationGroup = 'Organization';
 
     protected static ?string $recordTitleAttribute = 'name';
