@@ -23,9 +23,19 @@ class EmployeeResource extends Resource
     protected static ?string $model = Employee::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
-    protected static \UnitEnum|string|null $navigationGroup = 'HR Management';
+    protected static \UnitEnum|string|null $navigationGroup = 'Human Resources';
 
     protected static ?string $recordTitleAttribute = 'first_name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['first_name', 'last_name', 'email', 'employee_number'];
+    }
+
+    public static function getGlobalSearchResultTitle(\Illuminate\Database\Eloquent\Model $record): string
+    {
+        return $record->first_name . ' ' . $record->last_name . ' (' . $record->employee_number . ')';
+    }
 
     public static function form(Schema $schema): Schema
     {

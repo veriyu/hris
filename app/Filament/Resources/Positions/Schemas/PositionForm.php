@@ -11,10 +11,14 @@ class PositionForm
     {
         return $schema
             ->components([
-                TextInput::make('code')
-                    ->required(),
-                TextInput::make('name')
-                    ->required(),
+                \Filament\Schemas\Components\Section::make('Position Details')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('code')
+                            ->required(),
+                        TextInput::make('name')
+                            ->required(),
+                    ]),
             ]);
     }
 }

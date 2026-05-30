@@ -28,9 +28,27 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(\App\Filament\Auth\Login::class)
+            ->brandName('HRMS Pro')
+            ->font('Inter')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Indigo,
+                'gray' => Color::Slate,
             ])
+            ->navigationGroups([
+                \Filament\Navigation\NavigationGroup::make()
+                     ->label('Human Resources')
+                     ->icon('heroicon-o-users')
+                     ->collapsed(),
+                \Filament\Navigation\NavigationGroup::make()
+                     ->label('Finance & Payroll')
+                     ->icon('heroicon-o-banknotes')
+                     ->collapsed(),
+                \Filament\Navigation\NavigationGroup::make()
+                     ->label('Organization')
+                     ->icon('heroicon-o-building-office')
+                     ->collapsed(),
+            ])
+            ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

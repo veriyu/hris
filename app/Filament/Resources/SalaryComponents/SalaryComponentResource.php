@@ -21,7 +21,7 @@ class SalaryComponentResource extends Resource
     protected static ?string $model = SalaryComponent::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cube';
-    protected static \UnitEnum|string|null $navigationGroup = 'Finance';
+    protected static \UnitEnum|string|null $navigationGroup = 'Finance & Payroll';
 
     protected static ?string $recordTitleAttribute = 'name';
 
