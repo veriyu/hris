@@ -17,7 +17,7 @@ class EmployeeForm
             ->components([
                 \Filament\Schemas\Components\Tabs::make('Tabs')
                     ->tabs([
-                        \Filament\Forms\Components\Tabs\Tab::make('Personal Information')
+                        \Filament\Schemas\Components\Tabs\Tab::make('Personal Information')
                             ->schema([
                                 TextInput::make('nik')
                                     ->label('NIK / ID Card')
@@ -33,7 +33,7 @@ class EmployeeForm
                                     ->label('Date of Birth')
                                     ->required(),
                             ])->columns(2),
-                        \Filament\Forms\Components\Tabs\Tab::make('Employment Information')
+                        \Filament\Schemas\Components\Tabs\Tab::make('Employment Information')
                             ->schema([
                                 TextInput::make('employee_number')
                                     ->disabled()

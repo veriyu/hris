@@ -48,6 +48,13 @@ class Employee extends Model
         return $this->belongsTo(Position::class);
     }
 
+    public function salaryComponents(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(SalaryComponent::class, 'employee_salary_components')
+            ->withPivot('amount')
+            ->withTimestamps();
+    }
+
     public function supervisor(): BelongsTo
     {
         return $this->belongsTo(Employee::class, 'supervisor_id');

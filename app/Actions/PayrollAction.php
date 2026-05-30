@@ -12,7 +12,7 @@ class PayrollAction
     public function generatePayrolls(PayrollPeriod $period): void
     {
         DB::transaction(function () use ($period) {
-            $employees = Employee::with('activeSalary')->where('status', 'Active')->get();
+            $employees = Employee::with(['activeSalary', 'salaryComponents'])->where('status', 'Active')->get();
 
             foreach ($employees as $employee) {
                 if (!$employee->activeSalary) {
@@ -21,8 +21,19 @@ class PayrollAction
 
                 $activeSalary = $employee->activeSalary;
                 $basicSalary = $activeSalary->basic_salary;
-                $allowance = $activeSalary->allowance;
-                $deduction = $activeSalary->deduction;
+                
+                $allowance = 0;
+                $deduction = 0;
+
+                // Calculate from salary components
+                foreach ($employee->salaryComponents as $component) {
+                    if ($component->type === \App\Enums\SalaryComponentType::ALLOWANCE) {
+                        $allowance += $component->pivot->amount;
+                    } elseif ($component->type === \App\Enums\SalaryComponentType::DEDUCTION) {
+                        $deduction += $component->pivot->amount;
+                    }
+                }
+
                 $netSalary = $basicSalary + $allowance - $deduction;
 
                 $payroll = Payroll::firstOrCreate(
@@ -39,21 +50,14 @@ class PayrollAction
                     ]
                 );
 
-                // Create default items based on active salary structure
+                // Create detailed items based on components
                 if ($payroll->wasRecentlyCreated) {
-                    if ($allowance > 0) {
+                    foreach ($employee->salaryComponents as $component) {
                         $payroll->items()->create([
-                            'name' => 'Allowance',
-                            'type' => 'Earning',
-                            'amount' => $allowance,
-                        ]);
-                    }
-
-                    if ($deduction > 0) {
-                        $payroll->items()->create([
-                            'name' => 'Deduction',
-                            'type' => 'Deduction',
-                            'amount' => $deduction,
+                            'salary_component_id' => $component->id,
+                            'name' => $component->name,
+                            'type' => $component->type,
+                            'amount' => $component->pivot->amount,
                         ]);
                     }
                 }
@@ -63,8 +67,8 @@ class PayrollAction
 
     public function recalculatePayroll(Payroll $payroll): Payroll
     {
-        $totalAllowance = $payroll->items()->where('type', 'Earning')->sum('amount');
-        $totalDeduction = $payroll->items()->where('type', 'Deduction')->sum('amount');
+        $totalAllowance = $payroll->items()->where('type', \App\Enums\SalaryComponentType::ALLOWANCE->value)->sum('amount');
+        $totalDeduction = $payroll->items()->where('type', \App\Enums\SalaryComponentType::DEDUCTION->value)->sum('amount');
         $netSalary = $payroll->basic_salary + $totalAllowance - $totalDeduction;
 
         $payroll->update([
