@@ -30,6 +30,7 @@ class PayrollPeriod extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'payment_date' => 'date',
+        'status' => \App\Enums\PayrollPeriodStatus::class,
     ];
 
     public function payrolls(): HasMany

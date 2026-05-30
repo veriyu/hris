@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\PayrollPeriods\Schemas;
 
+use App\Enums\PayrollPeriodStatus;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -13,16 +15,18 @@ class PayrollPeriodForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->required(),
+                    ->required()
+                    ->maxLength(255),
                 DatePicker::make('start_date')
                     ->required(),
                 DatePicker::make('end_date')
                     ->required(),
                 DatePicker::make('payment_date')
                     ->required(),
-                TextInput::make('status')
+                Select::make('status')
+                    ->options(PayrollPeriodStatus::class)
                     ->required()
-                    ->default('Draft'),
+                    ->default(PayrollPeriodStatus::DRAFT),
             ]);
     }
 }

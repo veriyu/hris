@@ -30,6 +30,7 @@ class Payroll extends Model
     ];
 
     protected $casts = [
+        'status' => \App\Enums\PayrollStatus::class,
         'basic_salary' => 'decimal:2',
         'total_allowance' => 'decimal:2',
         'total_deduction' => 'decimal:2',

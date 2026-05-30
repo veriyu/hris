@@ -35,12 +35,7 @@ class PayrollsTable
                     ->money('IDR')
                     ->sortable(),
                 TextColumn::make('status')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Draft' => 'warning',
-                        'Paid' => 'success',
-                        default => 'gray',
-                    }),
+                    ->badge(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -59,8 +54,8 @@ class PayrollsTable
             ])
             ->recordActions([
                 \Filament\Actions\Action::make('download_payslip')
-                    ->label('Download PDF')
-                    ->icon('heroicon-o-document-arrow-down')
+                    ->label('View PDF')
+                    ->icon('heroicon-o-document-text')
                     ->url(fn (\App\Models\Payroll $record) => route('payroll.download', $record))
                     ->openUrlInNewTab(),
                 EditAction::make(),

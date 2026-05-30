@@ -19,9 +19,10 @@ class PayrollForm
                     Select::make('employee_id')
                         ->relationship('employee', 'first_name')
                         ->required(),
-                    TextInput::make('status')
+                    Select::make('status')
+                        ->options(\App\Enums\PayrollStatus::class)
                         ->required()
-                        ->default('Draft'),
+                        ->default(\App\Enums\PayrollStatus::DRAFT),
                 ])->columns(3),
                 \Filament\Schemas\Components\Section::make('Salary Details')->schema([
                     TextInput::make('basic_salary')

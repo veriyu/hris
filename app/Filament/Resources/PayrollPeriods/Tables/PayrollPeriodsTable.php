@@ -30,6 +30,7 @@ class PayrollPeriodsTable
                     ->date()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -58,8 +59,9 @@ class PayrollPeriodsTable
                             ->title('Payroll generated successfully!')
                             ->success()
                             ->send();
-                    })
-                    ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status === 'Draft' && $record->payrolls()->count() === 0),
+                    }),
+                    // ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status === 'Draft' && $record->payrolls()->count() === 0),
+                    // ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status === 'Draft'),
                 EditAction::make(),
             ])
             ->toolbarActions([

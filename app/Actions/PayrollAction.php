@@ -35,7 +35,7 @@ class PayrollAction
                         'total_allowance' => $allowance,
                         'total_deduction' => $deduction,
                         'net_salary' => $netSalary,
-                        'status' => 'Draft',
+                        'status' => \App\Enums\PayrollStatus::DRAFT,
                     ]
                 );
 
@@ -87,6 +87,6 @@ class PayrollAction
             'items' => $payroll->items,
         ]);
 
-        return $pdf->download('payslip-' . $payroll->employee->employee_number . '-' . $payroll->payrollPeriod->name . '.pdf');
+        return $pdf->stream('payslip-' . $payroll->employee->employee_number . '-' . $payroll->payrollPeriod->name . '.pdf');
     }
 }

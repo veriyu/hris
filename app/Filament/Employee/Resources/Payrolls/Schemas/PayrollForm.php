@@ -12,12 +12,17 @@ class PayrollForm
     {
         return $schema
             ->components([
-                Select::make('payroll_period_id')
-                    ->relationship('payrollPeriod', 'name')
-                    ->required(),
-                Select::make('employee_id')
-                    ->relationship('employee', 'id')
-                    ->required(),
+                \Filament\Schemas\Components\Section::make('Payroll Info')->schema([
+                    Select::make('payroll_period_id')
+                        ->relationship('payrollPeriod', 'name')
+                        ->disabled(),
+                    Select::make('employee_id')
+                        ->relationship('employee', 'first_name')
+                        ->disabled(),
+                    Select::make('status')
+                        ->options(\App\Enums\PayrollStatus::class)
+                        ->disabled(),
+                ])->columns(3),
                 TextInput::make('basic_salary')
                     ->required()
                     ->numeric()
