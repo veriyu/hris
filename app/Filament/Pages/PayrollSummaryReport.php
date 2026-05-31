@@ -3,11 +3,11 @@
 namespace App\Filament\Pages;
 
 use Filament\Pages\Page;
+use Filament\Forms\Form;
 
-class PayrollSummaryReport extends Page implements \Filament\Forms\Contracts\HasForms, \Filament\Tables\Contracts\HasTable
+class PayrollSummaryReport extends Page implements \Filament\Forms\Contracts\HasForms
 {
     use \Filament\Forms\Concerns\InteractsWithForms;
-    use \Filament\Tables\Concerns\InteractsWithTable;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-chart-bar';
 
@@ -23,64 +23,33 @@ class PayrollSummaryReport extends Page implements \Filament\Forms\Contracts\Has
 
     public ?int $payroll_period_id = null;
 
+    public $payrolls = [];
+    public $isSubmitted = false;
+
     public function mount(): void
     {
         $this->form->fill();
     }
 
-    protected function getFormSchema(): array
+    public function form(\Filament\Schemas\Schema $form): \Filament\Schemas\Schema
     {
-        return [
-            \Filament\Forms\Components\Select::make('payroll_period_id')
-                ->label('Payroll Period')
-                ->options(\App\Models\PayrollPeriod::pluck('name', 'id'))
-                ->searchable()
-                ->live()
-                ->required(),
-        ];
+        return $form
+            ->schema([
+                \Filament\Forms\Components\Select::make('payroll_period_id')
+                    ->label('Payroll Period')
+                    ->options(\App\Models\PayrollPeriod::pluck('name', 'id'))
+                    ->searchable()
+                    ->required(),
+            ]);
     }
 
-    public function table(\Filament\Tables\Table $table): \Filament\Tables\Table
+    public function tampilkan()
     {
-        return $table
-            ->query(
-                \App\Models\Payroll::query()
-                    ->when($this->payroll_period_id, fn($query) => $query->where('payroll_period_id', $this->payroll_period_id))
-                    ->when(!$this->payroll_period_id, fn($query) => $query->whereNull('id')) // Empty state
-            )
-            ->columns([
-                \Filament\Tables\Columns\TextColumn::make('employee.name')
-                    ->label('Karyawan')
-                    ->formatStateUsing(fn ($record) => $record->employee->first_name . ' ' . $record->employee->last_name)
-                    ->description(fn ($record) => $record->employee->position->name ?? '-')
-                    ->searchable(['employee.first_name', 'employee.last_name']),
-                    
-                \Filament\Tables\Columns\TextColumn::make('employee.bank.name')
-                    ->label('Info Rekening')
-                    ->description(fn ($record) => $record->employee->bank_account_number ?? '-')
-                    ->placeholder('Belum diatur'),
-                    
-                \Filament\Tables\Columns\TextColumn::make('net_salary')
-                    ->label('Take Home Pay')
-                    ->money('IDR')
-                    ->alignEnd()
-                    ->weight('bold')
-                    ->color('primary'),
-            ])
-            ->groups([
-                \Filament\Tables\Grouping\Group::make('employee.department.name')
-                    ->label('Divisi')
-                    ->collapsible(),
-            ])
-            ->defaultGroup('employee.department.name')
-            ->headerActions([
-                \Filament\Actions\Action::make('download_finance')
-                    ->label('Cetak PDF Finance')
-                    ->icon('heroicon-o-printer')
-                    ->color('success')
-                    ->url(fn () => $this->payroll_period_id ? route('payroll-period.download-finance', $this->payroll_period_id) : '#')
-                    ->openUrlInNewTab()
-                    ->disabled(fn () => !$this->payroll_period_id),
-            ]);
+        $this->validate();
+
+        $this->isSubmitted = true;
+        $this->payrolls = \App\Models\Payroll::with(['employee.bank'])
+            ->where('payroll_period_id', $this->payroll_period_id)
+            ->get();
     }
 }

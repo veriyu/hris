@@ -50,13 +50,34 @@ class PayrollPeriodsTable
             ])
             ->recordActions([
                 \Filament\Actions\Action::make('generate_payrolls')
-                    ->label('Generate Payrolls')
-                    ->icon('heroicon-o-cog')
+                    ->label(fn (\App\Models\PayrollPeriod $record) => $record->status === \App\Enums\PayrollPeriodStatus::DRAFT ? 'Generate Payrolls' : 'Recalculate Payrolls')
+                    ->icon(fn (\App\Models\PayrollPeriod $record) => $record->status === \App\Enums\PayrollPeriodStatus::DRAFT ? 'heroicon-o-cog' : 'heroicon-o-arrow-path')
                     ->requiresConfirmation()
+                    ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status !== \App\Enums\PayrollPeriodStatus::COMPLETED)
                     ->action(function (\App\Models\PayrollPeriod $record) {
                         app(\App\Actions\PayrollAction::class)->generatePayrolls($record);
+                        
+                        if ($record->status === \App\Enums\PayrollPeriodStatus::DRAFT) {
+                            $record->update(['status' => \App\Enums\PayrollPeriodStatus::PROCESSING]);
+                        }
+
                         \Filament\Notifications\Notification::make()
                             ->title('Payroll generated successfully!')
+                            ->success()
+                            ->send();
+                    }),
+                \Filament\Actions\Action::make('lock_and_complete')
+                    ->label('Lock & Complete')
+                    ->icon('heroicon-o-lock-closed')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->visible(fn (\App\Models\PayrollPeriod $record) => $record->status === \App\Enums\PayrollPeriodStatus::PROCESSING)
+                    ->action(function (\App\Models\PayrollPeriod $record) {
+                        $record->update(['status' => \App\Enums\PayrollPeriodStatus::COMPLETED]);
+                        $record->payrolls()->update(['status' => \App\Enums\PayrollStatus::PAID]);
+
+                        \Filament\Notifications\Notification::make()
+                            ->title('Payroll period locked and completed successfully!')
                             ->success()
                             ->send();
                     }),

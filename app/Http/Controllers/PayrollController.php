@@ -52,34 +52,30 @@ class PayrollController extends Controller
 
     public function downloadFinance(\App\Models\PayrollPeriod $payrollPeriod)
     {
-        $payrolls = $payrollPeriod->payrolls()->with(['items'])->get();
+        $payrolls = $payrollPeriod->payrolls()
+            ->with(['employee.bank', 'items'])
+            ->get();
         
+        $totalBasicSalary = 0;
+        $totalAllowance = 0;
+        $totalDeduction = 0;
         $totalNetSalary = 0;
-        $totalGrossSalary = 0;
-        $totalBPJS = 0;
-        $totalOtherDeductions = 0;
 
         foreach ($payrolls as $payroll) {
-            $earnings = $payroll->items()->where('type', 'Earning')->sum('amount');
-            $gross = $payroll->basic_salary + $earnings;
-            $totalGrossSalary += $gross;
-
-            $bpjs = $payroll->items()->where('type', 'Deduction')->where('name', 'like', '%BPJS%')->sum('amount');
-            $totalBPJS += $bpjs;
-
-            $otherDeductions = $payroll->items()->where('type', 'Deduction')->where('name', 'not like', '%BPJS%')->sum('amount');
-            $totalOtherDeductions += $otherDeductions;
-
+            $totalBasicSalary += $payroll->basic_salary;
+            $totalAllowance += $payroll->total_allowance;
+            $totalDeduction += $payroll->total_deduction;
             $totalNetSalary += $payroll->net_salary;
         }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.payroll_finance', [
             'period' => $payrollPeriod,
-            'totalGrossSalary' => $totalGrossSalary,
-            'totalBPJS' => $totalBPJS,
-            'totalOtherDeductions' => $totalOtherDeductions,
+            'payrolls' => $payrolls,
+            'totalBasicSalary' => $totalBasicSalary,
+            'totalAllowance' => $totalAllowance,
+            'totalDeduction' => $totalDeduction,
             'totalNetSalary' => $totalNetSalary,
-        ]);
+        ])->setPaper('a4', 'landscape');
 
         return $pdf->stream('Payroll_Finance_Report_' . $payrollPeriod->name . '.pdf');
     }

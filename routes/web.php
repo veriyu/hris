@@ -18,3 +18,7 @@ Route::get('/payroll-period/{payrollPeriod}/download-all', [PayrollController::c
 Route::get('/payroll-period/{payrollPeriod}/download-finance', [PayrollController::class, 'downloadFinance'])
     ->name('payroll-period.download-finance')
     ->middleware('auth');
+
+Route::get('/login', function () {
+    return redirect()->to('/admin/login');
+})->name('login');
