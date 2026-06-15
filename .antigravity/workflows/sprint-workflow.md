@@ -8,6 +8,7 @@
 6. Test
 7. UAT
 8. Release
+9. Recap to memory/completed-sprints.md
 
 Definition of Done:
 

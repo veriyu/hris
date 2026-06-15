@@ -1,65 +1,38 @@
 # Laravel Standard
 
-## Required Workflow
+## Preferred Workflow
 
-1. Migration
-2. Enum
-3. Model
-4. Service
-5. Action
-6. Policy
-7. API
-8. Filament Resource
-9. Test
+Use only required layers.
 
-## Validation
+Possible layers:
 
-Use FormRequest whenever possible.
-
-## Business Logic
-
-Do not place business logic inside:
-
-- Controller
-- Filament Resource
+- Migration
+- Enum
 - Model
-
-Place business logic inside:
-
 - Service
 - Action
-
-## Authorization
-
-Always use:
-
 - Policy
-- Spatie Permission
+- API
+- Filament Resource
+- Test
 
-Never hardcode role checks.
+Do not create unnecessary layers.
 
-Bad:
+## Layer Responsibility
 
-if ($user->role === 'admin')
+Service
 
-Good:
+- Coordinate business processes.
+- Call multiple actions.
+- Manage transactions.
 
-$user->can('approve loan')
+Action
 
-## Database
+- Execute a single business operation.
+- Reusable business logic unit.
 
-Always:
+Example:
 
-- Foreign keys
-- Indexes
-- Soft delete when needed
-
-## Transactions
-
-Use DB transaction for critical processes.
-
-Examples:
-
-- Payroll generation
-- Loan disbursement
-- Savings withdrawal
+VoidApprovalService
+    -> ApproveVoidAction
+    
